@@ -101,6 +101,8 @@ I am starting to realize that I need to expand/refresh my vocabulary:
   - This also brings me to another constraint, just like we have the idea of path types that we can connect together, we also have different parts of the path that have different criteria, for example if we have a valve (wheel turning), on a specific part of the path then it may have a higher accessibility/clearance score, with a minimum score that has to be respected.
   - We may even need to create paths to reach certain parts of other paths, we can call those accessibility paths, those accessibility paths need to be modeled in a way were if an accessibility path exists next to an unreachable component, then the component becomes accessible. So we need a way were we allow for an (impossible unnaccessbile) path to be created, and even allow for multiple impossible paths to be created then try to create accessibility paths for them if needed. If possible proceed, if not then we may have to backtrack. Should the accessibility paths be created before or after? Accessibility paths can be thought of as ladders used to get to certain places that have a high accessibility/maintainibility score.
   - We should also consider during the equipment configuration stage, that some equipments may require to be placed on a specific platform type, so just like we have path types, we can also have platform types, vibration platform, concrete base etc...
+  - Another thing to consider when it comes path types, is that some pipes may be supply pipes with a pump providing the pressure required to transport the fluid in the pipes, this allows the fluid to travel against gravity if needed, but on the ohter hand we may have pipes that use gravty to transport the liquid, for example condensation.
+  - Since we have different planes for a path, plane-supply plane-termination and a path in between, we can specify if a plane-supply has is powered (pump), then we can use that to set a hard constraint, such that if we come up with a configuration that is not strong enough to power the proposed path then we drop that path/backtrack.
 
 ## Scoring Functions and validation
 
@@ -111,6 +113,8 @@ In order to come to come up with effective optimization algorithms, it is import
 - What about using engineering metrics such as cooling efficiency, or pressure drops/ head loss, energy consumption etc..
 
 - What if come up with a complexity metric that penalizes complex designs.
+
+- Another way to score/normalize for pipe length, would be to take the shortest path to the required component, using the components library mentioned earlier, where we have a bunch of for example predefined pipes with certain characterisitics to pick from. This way we find the "optimal" shortest path, vs the actual path we propose that also has to consider the other paths.
 
 - But most importanty we need a baseline,
 
@@ -173,6 +177,9 @@ In order to come to come up with effective optimization algorithms, it is import
   - This seems like a tree traversal problem, let's go back to how we would design something in 3d space, this thinking exercise will help me determine some constraints that I can use to determine whether a tree branch is a valid branch, or whether I should simply drop that branch.
   - I would cluster related equipment with each other. I would also cluster related paths with each other, I would eliminate difficult paths, to reduce our potential pathspace using our path validation/optimization criteria. I would follow a set of rules that industry agrees on, I would start by fitting the largest paths first. Since we mentioned that ideally we would want related paths togethor, can we treat a group/cluster of small paths that originate from a common direction as a larger path? This can also simplify our problem space, and eliminate weird configurations
   - If different configurations result in different path spaces, then how do we find the equipment configuration that will result in the optimal path configuration
+  - In order to reduce our equipment configuration space and make it more managable, we can do a quick calculation using the "shortest valid paths" for all the paths that need to be made while we are calculating them if we exceed a certain threshold then we automatically know that the configuaration was never an optimal one to begin with before wasting time computing the optimal paths for a given config.
+  - We can have predefined zones for equipment, for example ducts are in this region, heatpump are expected to be here.
+  - We can also have predefined no go zones, where intentionally limit the search space using existing domain knowledge.
 
 - Equipment placement
   - path space -> the complete set of possible paths we can have for a given equipment placement configuration
