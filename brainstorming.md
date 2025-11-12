@@ -245,3 +245,113 @@ In order to come to come up with effective optimization algorithms, it is import
 - We need to design a data interfaces/models that represent our real world room/equipment, paths etc...
 - We need to design algorithms that based on those models, and then use the scoring function/criteria/validation strategy to measure effectiveness
 - Finally we need to iterate iterate iterate. iterate on the scoring functions, iterate on the validation strategy, improve our system representatio overtime, maybe first we start with blocks and cubes, and grid-layouts, then we move to more finegrained representation that allows for more creativity for the path movement etc... improve the algorithms etc...
+
+## Glossary:
+
+Based on the above I have done some research and found some terms that would be useful to describe the problem space that we are dealing with, instead of me using made up words like path-space, we can use routing space which is a well known problem that is easily searchable. I may or may not end up using some or all the terms below to refine further refine/organize my thoughts above.
+
+### Core Spatial and Geometric Concepts
+
+- **Configuration Space (C-space)**
+  The full set of all possible positions and orientations of all equipment and paths/routes that do not violate space or overlap constraints. Borrowed from robotics and motion planning.
+
+- **Routing Space**
+  The search space of all possible connection routes that can exist within the current equipment layout.
+
+- **Volume Constraint**
+  A spatial limit that ensures all equipment and connections fit within the room boundaries and do not overlap.
+
+- **Bounding Volume**
+  A simple 3D box or shape that wraps around a more complex object. Used for quick overlap and collision checks during layout.
+
+- **Collision Detection**
+  A geometric check to make sure two components or paths do not overlap in space. A key step when validating if a layout is physically buildable.
+
+- **Pose Constraint**
+  A restriction on how a component can be rotated or oriented. For example, a valve wheel must face forward, or a duct must stay aligned with a ceiling plane. I wouldn't want a path to go forward, then bend backwards, so for example, I could constrain it so that a valid addition of a component from a library necesitates that we move in the positive direction relative from the path-start to the path-end.
+
+- **Clearance**
+  The minimum free space that must exist around equipment for maintenance, ventilation, or regulatory safety.
+
+- **Zoning Constraint**
+  A rule that defines which regions of the space are allowed or forbidden for certain equipment or paths. Used to avoid restricted or unsafe areas.
+
+### Optimization and Search Methods
+
+- **Backtracking Search**
+  A search process that explores possible configurations one step at a time. When a constraint is violated, it undoes the last step and tries a different path. Useful when exploring all valid layouts or connection routes. Which is exactly what are trying to do here.
+
+- **Tree Search**
+  A way to represent a search process as a branching tree of possible decisions. Each branch represents a configuration or layout option that can be explored or pruned.
+
+- **Simulated Annealing**
+  An optimization technique that slowly reduces randomness over time. It starts with exploration and gradually focuses on refining the best configuration.
+
+- **Mixed-Integer Programming (MIP)**
+  A mathematical optimization technique that handles both discrete (integer) and continuous variables. Used for layout and routing problems with many constraints.
+
+- **Multi-Objective Optimization**
+  An optimization process that balances several competing goals, such as minimizing total pipe length while maximizing accessibility.
+
+- **Quadratic Assignment Problem (QAP)**
+  A mathematical model for layout optimization where each pair of components has a flow cost that depends on their distance from each other.
+
+### Layout and Routing Principles
+
+- **Facility Layout Problem (FLP)**
+  A classic optimization problem where the goal is to arrange equipment or rooms in a way that minimizes total cost or connection distance while respecting constraints.
+
+- **Graph-Based Routing**
+  A pathfinding approach where each component is represented as a node and possible connections are edges. Common algorithms include A\* and Dijkstra.
+
+- **Manhattan Routing**
+  A routing style where connections move in straight lines and turn at right angles. This makes routes predictable and easier to build. Term originates from the grid-like layout of Manhattan-Newyork.
+
+- **Path Clustering**
+  Grouping multiple similar or parallel paths into one shared region. Reduces clutter and can simplify maintenance and installation.
+
+- **Path Smoothness**
+  A measure of how straight or clean a connection path is. Fewer bends or direction changes usually mean higher smoothness and better efficiency.
+
+- **Steiner Tree Problem**
+  A graph problem that finds the shortest network connecting multiple components, sometimes by adding extra intermediate nodes.
+
+- **Functional Zoning**
+  Clustering related equipment together based on their purpose. For example, grouping all HVAC components in one area and all pumps in another.
+
+- **Component Library**
+  A predefined set of elements such as ducts, pipes, valves, or connectors. Each element has physical dimensions and properties that can be combined to form valid paths.
+
+### Scoring and Evaluation
+
+- **Maintainability Score**
+  A numerical score that captures how easy it is to access, inspect, or service equipment. It combines accessibility and reachability. Higher scores indicate simpler maintenance, better layout (the simpler the better), and safer operation. It can also account for the "ergonomics of the layout". If I am going to maintain something, I would rather have all the relevant pipes grouped next to each other.
+
+- **Complexity Penalty**
+  A penalty added to the scoring function to discourage unnecessary bends, crossings, or overly complicated layouts. Encourages simpler and more maintainable designs.
+
+- **Surrogate Validation**
+  Checking if a scoring or objective function aligns with what humans or industry standards would consider a “good” design.
+
+- **Reward Hacking**
+  When an optimization or reinforcement learning model finds a loophole in the scoring function and exploits it to get a high score, even though the result is unrealistic.
+
+### Design and Engineering Concepts
+
+- **Accessibility**
+  How easy it is to reach, inspect, or service a piece of equipment. Usually measured by clearances or how much free space there is around an object. Accessibility is also used when reasoning about maintainability over time.
+
+- **Reachability Metric**
+  A measure of how easily a person or robot can reach a component or area. Used when scoring accessibility. This is different from accessibility. Just because something is accessible, does not mean it is reachable. Reachability is a bonus, because we can use tools like ladders to reach areas. But they are a plus, I am just including this since I noticed a ladder-like layout in the provided screenshot in the assignment. This tells me that some paths are actually used to improve reachability to specific components and that specific components have to be reachable.
+
+- **Design for Maintainability**
+  Design principle that focuses on how easily something can be maintained over its lifetime. The easier it is to access and replace, the higher the maintainability score.
+
+- **Adjacency**
+  When two components share a boundary or are close enough to be directly connected. In layout problems, adjacency defines which items can connect without breaking design rules.
+
+- **Scalability**
+  How easily a configuration can adapt to future changes or expansions. This can include physical space for new equipment, modular design, or pre-planned connection points for future systems.
+
+- **Constraint Satisfaction**
+  A process for checking if a layout or path respects all rules and limitations such as clearance, reachability, or adjacency.
