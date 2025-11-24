@@ -1,3 +1,4 @@
+from building_simulator.pathfind import find_shortest_path_bfs
 from building_simulator.room import Room
 
 
@@ -37,3 +38,12 @@ class Floor:
         room_a.add_door_connection(room_name_b)
         # Add door to B pointing to A
         room_b.add_door_connection(room_name_a)
+
+    def find_path(self, start_room_name: str, end_room_name: str) -> list[str]:
+        """
+        Delegates to the external pathfinding module.
+        """
+        return find_shortest_path_bfs(self.rooms, start_room_name, end_room_name)
+
+    def __repr__(self):
+        return f"Floor(Level: {self.floor_level}, Rooms: {list(self.rooms.keys())})"
