@@ -1,6 +1,7 @@
 import pytest
-from floor import Floor
-from room import Room
+
+from building_simulator.floor import Floor
+from building_simulator.room import Room
 
 
 @pytest.fixture

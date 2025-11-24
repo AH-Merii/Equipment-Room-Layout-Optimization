@@ -1,4 +1,4 @@
-from room import Room
+from building_simulator.room import Room
 
 
 def test_room_initialization():
