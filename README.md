@@ -50,7 +50,7 @@ We utilized an Adjacency List pattern to represent the floor plan:
 
 Since the "cost" of moving between any two connected rooms is equal (1 step), we implemented Breadth-First Search (BFS).
 
-- **Why BFS?** It guarantees the shortest path in an unweighted graph and is computationally efficient ($O(V+E)$) for sparse graphs like building layouts.
+- **Why BFS?** It guarantees the shortest path in an unweighted graph and is computationally efficient $O(V+E)$ for sparse graphs like building layouts.
 
 - **Separation of Concerns**: The algorithm lives in pathfind.py, decoupled from the Floor class logic.
 
